@@ -1,0 +1,23 @@
+# Core data
+yfinance>=0.2.40
+pandas>=2.0.0
+numpy>=1.26.0
+
+# Machine learning
+torch>=2.2.0
+scikit-learn>=1.4.0
+scipy>=1.12.0
+
+# Explainability (SHAP cameo in notebook 05)
+shap>=0.45.0
+
+# Visualisation
+matplotlib>=3.8.0
+seaborn>=0.13.0
+
+# Notebooks
+jupyter>=1.0.0
+ipykernel>=6.0.0
+
+# Config parsing
+pyyaml>=6.0.0
