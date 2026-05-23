@@ -1,1 +1,1 @@
-# predicting_short_term_stock_returns
+# Predicting Short-Term Stock Returns using PyTorch
