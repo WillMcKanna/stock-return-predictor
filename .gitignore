@@ -1,37 +1,21 @@
-# ── Data ──────────────────────────────────────────────────────────────────────
-# Never commit raw or processed data — too large and regenerable
 data/
-
-# ── Model checkpoints ─────────────────────────────────────────────────────────
 checkpoints/
-
-# ── Python ────────────────────────────────────────────────────────────────────
 __pycache__/
 *.py[cod]
 *.pyo
 *.pyd
 .Python
-
-# Virtual environments
 venv/
 .venv/
 env/
-
-# ── Jupyter ───────────────────────────────────────────────────────────────────
 .ipynb_checkpoints/
 *.ipynb_checkpoints
-
-# ── OS clutter ────────────────────────────────────────────────────────────────
-.DS_Store           # Mac
-Thumbs.db           # Windows
+.DS_Store           
+Thumbs.db           
 desktop.ini
-
-# ── IDEs ──────────────────────────────────────────────────────────────────────
 .vscode/
 .idea/
 *.swp
 *.swo
-
-# ── Secrets ───────────────────────────────────────────────────────────────────
 .env
 *.env
