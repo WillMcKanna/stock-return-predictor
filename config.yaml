@@ -1,0 +1,54 @@
+data:
+  start_date: "2015-01-01"
+  end_date:   "2024-12-31"
+  train_end:  "2020-12-31"
+  val_end:    "2022-12-31"
+  raw_dir:    "data/raw"
+  processed_dir: "data/processed"
+
+  # Small default ticker set for fast iteration during development.
+  # Expand to the full S&P 500 (or a broader sample) for final results.
+  tickers:
+    - AAPL
+    - MSFT
+    - GOOG
+    - AMZN
+    - JPM
+    - JNJ
+    - XOM
+    - WMT
+    - PG
+    - MA
+
+features:
+  momentum_windows:    [5, 10, 21]
+  volatility_windows:  [10, 21]
+  rsi_window:          14
+  ma_short:            10
+  ma_long:             50
+  volume_window:       10
+  target_horizon:      5          # predict 5-day forward return
+
+training:
+  batch_size:  256
+  max_epochs:  50
+  patience:    10                 # early stopping patience
+  seed:        42
+
+models:
+  mlp:
+    hidden_dim: 128
+    dropout:    0.3
+    lr:         0.001
+
+  cnn:
+    n_filters:   32
+    kernel_size: 3
+    dropout:     0.3
+    lr:          0.001
+
+  lstm:
+    hidden_size: 64
+    num_layers:  2
+    dropout:     0.3
+    lr:          0.001
