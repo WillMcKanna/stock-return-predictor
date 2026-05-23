@@ -1,13 +1,9 @@
-"""
-data_pipeline.py
+# data_pipeline.py
+# Purpose: scrapes historical S&P 500 data from yfinance.
+# This information comes from a well-maintained Wikipedia article.
+# Usage: python3 src/data_pipeline.py
 
-Downloads historical price/volume data for S&P 500 constituents via yfinance
-and saves clean CSVs to data/raw/.
-
-Usage:
-    python src/data_pipeline.py
-"""
-
+# Import dependencies
 import os
 import time
 import logging
@@ -17,7 +13,7 @@ import yfinance as yf
 # ── Config ────────────────────────────────────────────────────────────────────
 
 START_DATE  = "2015-01-01"
-END_DATE    = "2024-12-31"
+END_DATE    = "2025-12-31"
 RAW_DIR     = "data/raw"
 INTERVAL    = "1d"          # daily bars
 BATCH_SIZE  = 50            # tickers per yfinance batch call

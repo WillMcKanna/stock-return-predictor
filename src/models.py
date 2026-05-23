@@ -1,66 +1,56 @@
-"""
-models.py
+# models.py
+# Purpose: Defines three different PyTorch models for stock predictions.
+# RME: Models take in a 1D vector of features outlined in features.py
+#      and output a return prediction (just a scalar). 
 
-PyTorch model definitions for stock return prediction.
-All models take a flat feature vector and output a scalar return prediction.
-
-Usage:
-    from src.models import MLP, CNN1D, LSTM
-    from src.features import FEATURE_COLS
-
-    n_features = len(FEATURE_COLS)
-    model = MLP(input_dim=n_features)
-"""
-
+# Imports dependencies, including feature cols from features.py
 import torch
 import torch.nn as nn
 from src.features import FEATURE_COLS
 
-N_FEATURES = len(FEATURE_COLS)  # convenience constant
+# Creates a convenient constant for input layer of models
+NUM_FEATURES = len(FEATURE_COLS)
 
 
-# ── MLP ───────────────────────────────────────────────────────────────────────
-
+# Multi-Layered Perceptron Model (rather basic architecture).
+# Dropout: prevents neuron co-dependence by randomly turning some off.
+# BatchNorm: for each "batch" of tickers, normalizes network layer inputs
+#            using z-score standardization, then applies scale and shift params.
 class MLP(nn.Module):
-    """
-    Multi-Layer Perceptron with dropout and batch normalization.
-    The simplest architecture — a strong baseline before trying CNN or LSTM.
-
-    Architecture:
-        Linear(input_dim → hidden_dim)
-        BatchNorm1d → ReLU → Dropout
-        Linear(hidden_dim → hidden_dim // 2)
-        BatchNorm1d → ReLU → Dropout
-        Linear(hidden_dim // 2 → 1)
-
-    Args:
-        input_dim  : number of input features (default: N_FEATURES)
-        hidden_dim : width of the first hidden layer (default: 128)
-        dropout    : dropout probability (default: 0.3)
-    """
-
+    # Initializes the MLP model and defines useful member vars
+    # input_dim: # of input features, determined by features.py
+    # hidden_dim: # of nodes in first hidden layer
+    # dropout: dropout prob for a certain node in a given layer
     def __init__(
         self,
-        input_dim: int  = N_FEATURES,
+        input_dim: int  = NUM_FEATURES,
         hidden_dim: int = 128,
         dropout: float  = 0.3,
     ):
         super().__init__()
 
-        # TODO: define self.network as an nn.Sequential block following
-        # the architecture described above.
-        # Hint: nn.Linear, nn.BatchNorm1d, nn.ReLU, nn.Dropout
-        self.network = None
+        # Defines self.network as an nn.Sequential block, handles forward chaining
+        # Start with small input layer of full feature width, expand to 128,
+        # then shrink to 64 and shrink to a final point prediction (scalar).
+        # Between inner layers, normalize batches, then use ReLU activation func,
+        # then initiate dropout before calling nn.Linear again.
+        self.network = nn.Sequential(
+            nn.Linear(input_dim, hidden_dim),
+            nn.BatchNorm1d(hidden_dim),
+            nn.ReLU(),
+            nn.Dropout(dropout),
+            nn.Linear(hidden_dim, hidden_dim // 2),
+            nn.BatchNorm1d(hidden_dim // 2),
+            nn.ReLU(),
+            nn.Dropout(dropout),
+            nn.Linear(hidden_dim // 2, 1)
+        )
 
+    # Forwards the argument of the MLP model in model.py into the network
+    # defined above, then returns a tensor of dim (batch_size) 
+    # instead of (batch_size, 1), which is the output of self.network
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        """
-        Args:
-            x : tensor of shape (batch_size, input_dim)
-        Returns:
-            tensor of shape (batch_size,)  — scalar prediction per sample
-        """
-        # TODO: pass x through self.network and squeeze the output dimension
-        return None
+        return self.network(x).squeeze()
 
 
 # ── 1D CNN ────────────────────────────────────────────────────────────────────
@@ -89,7 +79,7 @@ class CNN1D(nn.Module):
 
     def __init__(
         self,
-        input_dim: int   = N_FEATURES,
+        input_dim: int   = NUM_FEATURES,
         n_filters: int   = 32,
         kernel_size: int = 3,
         dropout: float   = 0.3,
@@ -151,7 +141,7 @@ class LSTMModel(nn.Module):
 
     def __init__(
         self,
-        input_dim: int   = N_FEATURES,
+        input_dim: int   = NUM_FEATURES,
         hidden_size: int = 64,
         num_layers: int  = 2,
         dropout: float   = 0.3,
